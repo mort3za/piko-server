@@ -7,7 +7,6 @@ import fastifyCookie, { FastifyCookieOptions } from "fastify-cookie";
 
 // routes
 import hi from "../fastify/routes/hi";
-import twTest from "../fastify/routes/tw-test";
 import authenticate from "../fastify/routes/authenticate";
 import authenticationCallback from "../fastify/routes/authentication-callback";
 import timelines from "../fastify/routes/timelines";
@@ -22,7 +21,6 @@ function build() {
 
   // routes
   app.register(hi, { prefix: API_PREFIX });
-  app.register(twTest, { prefix: API_PREFIX });
   app.register(authenticate, { prefix: API_PREFIX });
   app.register(authenticationCallback, { prefix: API_PREFIX });
   app.register(timelines, { prefix: API_PREFIX });

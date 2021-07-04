@@ -4,11 +4,10 @@ import { readAccessTokens } from "../functions/helpers";
 async function latestTweets(request, reply) {
   try {
     const { accessToken, accessTokenSecret } = readAccessTokens(request);
-
     const twitterClient = getTwitterClient({ accessToken, accessTokenSecret });
 
-    const data = await twitterClient.tweets.statusesHomeTimeline({ count: 8 });
-    console.log("data", data);
+    const options = _getOptions(request);
+    const data = await twitterClient.tweets.statusesHomeTimeline(options);
     reply.send({ data });
   } catch (error) {
     console.log(error);
@@ -19,5 +18,13 @@ async function latestTweets(request, reply) {
 const routes = async function routes(fastify, options) {
   fastify.get("/timelines/latest-tweets", latestTweets);
 };
+
+function _getOptions(request) {
+  const MAX_COUNT = 100;
+  const options = {
+    count: Math.min(request.query.count || 8, MAX_COUNT),
+  };
+  return options;
+}
 
 export default routes;
