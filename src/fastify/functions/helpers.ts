@@ -7,6 +7,9 @@ export function getSignedCookie(request, cookieName) {
 }
 
 export function readAccessTokens(request): { accessToken: string; accessTokenSecret: string } {
+  if (!request.cookies.accessToken || !request.cookies.accessTokenSecret) {
+    throw responseError({ statusCode: 401, message: "You are not logged in." });
+  }
   const accessToken = getSignedCookie(request, "accessToken");
   const accessTokenSecret = getSignedCookie(request, "accessTokenSecret");
   if (!accessToken || !accessTokenSecret) {

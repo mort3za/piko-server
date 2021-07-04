@@ -22,14 +22,16 @@ async function authenticationCallback(request, reply) {
       oauthVerifier,
     });
 
-    const redirectUrl = `${FRONTEND_BASE_URL}/home`;
+    const redirectUrl = `//${FRONTEND_BASE_URL}/home`;
     reply
       .setCookie("accessToken", accessToken, cookieOptions)
       .setCookie("accessTokenSecret", accessTokenSecret, cookieOptions)
       .clearCookie("oauthToken", cookieOptions)
       .clearCookie("oauthTokenSecret", cookieOptions)
-      .code(302)
-      .redirect(redirectUrl);
+      .type("text/html")
+      .send(
+        `<html><head><script>window.location.replace("${redirectUrl}")</script></head><body>Redirecting to <a href="${redirectUrl}">homepage</a>...</body></html>`,
+      );
   } catch (error) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });

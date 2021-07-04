@@ -1,6 +1,6 @@
 import fastifyCors from "fastify-cors";
 
-const { NODE_PROFILE } = process.env;
+const { NODE_PROFILE, FRONTEND_BASE_URL } = process.env;
 
 export function register(fastify) {
   fastify.register(fastifyCors, {
@@ -15,7 +15,7 @@ export function register(fastify) {
         cb(null, true);
         return;
       }
-      if (/medxdoc.medxfactor.com/.test(origin)) {
+      if (RegExp(FRONTEND_BASE_URL as string).test(origin)) {
         cb(null, true);
         return;
       }
