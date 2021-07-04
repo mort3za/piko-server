@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "github": {
+    "silent": false
+  },
+  "builds": [
+    {
+      "src": "src/api/serverless.ts",
+      "use": "@vercel/node",
+      "config": {
+        "helpers": false
+      }
+    },
+    { "src": "src/public/**", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/src/api/serverless.ts"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/src/public/$1"
+    }
+  ]
+}
