@@ -8,7 +8,6 @@ const routes = async function routes(fastify, options) {
 async function authenticate(request, reply) {
   try {
     const { oauthToken, oauthTokenSecret } = await getOauthTokens();
-    console.log("oauthToken, oauthTokenSecret----------1:", oauthToken, oauthTokenSecret);
 
     const redirectUrl = "https://twitter.com/oauth/authorize?oauth_token=" + oauthToken;
     reply

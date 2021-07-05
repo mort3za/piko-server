@@ -5,3 +5,6 @@ Authorization example:
 curl --location --request GET 'https://api.twitter.com/2/users/by/username/jack' -H 'Authorization: Bearer <token>'
 
 userId sample: 73040500
+
+rate limits: https://developer.twitter.com/en/docs/twitter-api/v1/rate-limits
+

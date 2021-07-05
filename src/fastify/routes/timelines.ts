@@ -8,7 +8,7 @@ async function latestTweets(request, reply) {
 
     const options = _getOptions(request);
     const data = await twitterClient.tweets.statusesHomeTimeline(options);
-    reply.send({ data });
+    reply.send({ list: data });
   } catch (error) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });

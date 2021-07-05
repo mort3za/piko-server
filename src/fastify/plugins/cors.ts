@@ -1,16 +1,18 @@
 import fastifyCors from "fastify-cors";
 
-const { NODE_PROFILE, FRONTEND_BASE_URL } = process.env;
+const { NODE_ENV, FRONTEND_BASE_URL } = process.env;
 
 export function register(fastify) {
-  fastify.register(fastifyCors, {
+  const options = {
+    credentials: true,
     origin: (origin, cb) => {
       if (!origin) {
         // direct link openings
         cb(null, true);
         return;
       }
-      if (NODE_PROFILE === "development" && /localhost/.test(origin)) {
+
+      if (NODE_ENV === "development" && /localhost/.test(origin)) {
         //  Request from localhost will pass
         cb(null, true);
         return;
@@ -22,5 +24,7 @@ export function register(fastify) {
       // Generate an error on other origins, disabling access
       cb(new Error("Not allowed."));
     },
-  });
+  };
+
+  fastify.register(fastifyCors, options);
 }
