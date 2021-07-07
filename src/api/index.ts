@@ -11,6 +11,7 @@ import hi from "../fastify/routes/hi";
 import authenticate from "../fastify/routes/authenticate";
 import authenticationCallback from "../fastify/routes/authentication-callback";
 import timelines from "../fastify/routes/timelines";
+import tweet from "../fastify/routes/tweet";
 
 const { API_PREFIX, LOG_LEVEL, COOKIE_SECRET } = process.env;
 
@@ -26,6 +27,7 @@ function build() {
   app.register(authenticate, { prefix: API_PREFIX });
   app.register(authenticationCallback, { prefix: API_PREFIX });
   app.register(timelines, { prefix: API_PREFIX });
+  app.register(tweet, { prefix: API_PREFIX });
 
   // register plugins
   registerCorsPlugin(app);

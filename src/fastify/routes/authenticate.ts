@@ -18,8 +18,8 @@ async function authenticate(request, reply) {
     });
 
     reply
-      .setCookie("oauth_token", oauth_token, cookieOptions)
-      .setCookie("oauth_token_secret", oauth_token_secret, cookieOptions)
+      .setCookie("oauthToken", oauth_token, cookieOptions)
+      .setCookie("oauthTokenSecret", oauth_token_secret, cookieOptions)
       .code(302)
       .redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`);
   } catch (error) {
@@ -29,6 +29,3 @@ async function authenticate(request, reply) {
 }
 
 export default routes;
-
-// const resultAuthorize = await twitterClient.basics.oauthAuthorize();
-// console.log("resultAuthorize", resultAuthorize);

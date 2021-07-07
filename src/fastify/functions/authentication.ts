@@ -11,7 +11,6 @@ const {
   TWITTER_API_SECRET,
 } = process.env;
 
-// todo: remove
 // Uses OAuth 1.0a
 export function getConsumerKeys(version = 2) {
   switch (version) {
@@ -37,20 +36,6 @@ export function getConsumerKeys(version = 2) {
   }
 }
 
-// todo: remove
-export function getOauthTokens(): Promise<{ oauthToken: string; oauthTokenSecret: string }> {
-  return new Promise((resolve, reject) => {
-    getConsumerKeys(1).getOAuthRequestToken(function (error, oauthToken, oauthTokenSecret, results) {
-      if (error) {
-        reject(error);
-      } else {
-        resolve({ oauthToken, oauthTokenSecret });
-      }
-    });
-  });
-}
-
-// todo: remove
 export function fetchAccessTokens({
   oauthToken,
   oauthTokenSecret,

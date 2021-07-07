@@ -13,8 +13,8 @@ const routes = async function routes(fastify, options) {
 
 async function authenticationCallback(request, reply) {
   try {
-    const oauthToken = getSignedCookie(request, "oauth_token");
-    const oauthTokenSecret = getSignedCookie(request, "oauth_token_secret");
+    const oauthToken = getSignedCookie(request, "oauthToken");
+    const oauthTokenSecret = getSignedCookie(request, "oauthTokenSecret");
     const { oauth_verifier } = request.query;
 
     const { accessToken, accessTokenSecret } = await fetchAccessTokens({

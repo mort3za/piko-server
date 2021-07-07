@@ -13,11 +13,11 @@ rate limits: https://developer.twitter.com/en/docs/twitter-api/v1/rate-limits
 
 API
 --------------
-get list timeline: TwitterClient.accountsAndUsers.listsStatuses(parameters)
-get subscribed lists: TwitterClient.accountsAndUsers.listsSubscriptions(parameters)
+list of lists: TwitterClient.accountsAndUsers.listsList(parameters)
+list timeline: TwitterClient.accountsAndUsers.listsStatuses(parameters)
+subscribed lists: TwitterClient.accountsAndUsers.listsSubscriptions(parameters)
 add member to list: TwitterClient.accountsAndUsers.listsMembersCreate(parameters)
 remove member from list: TwitterClient.accountsAndUsers.listsMembersDestroy(parameters)
-subscribe to a list: TwitterClient.accountsAndUsers.listsSubscribersCreate(parameters)
 get pending follow requests: TwitterClient.accountsAndUsers.friendshipsIncoming(parameters)
 follow: TwitterClient.accountsAndUsers.friendshipsCreate(parameters)
 unfollow: TwitterClient.accountsAndUsers.friendshipsDestroy(parameters)
@@ -32,3 +32,12 @@ report spam: TwitterClient.accountsAndUsers.usersReportSpam(parameters)
 retweet: TwitterClient.tweets.statusesRetweetById(parameters)
 unretweet: TwitterClient.tweets.statusesUnretweetById(parameters)
 tweet: TwitterClient.tweets.statusesUpdate(parameters)
+home timeline: TwitterClient.tweets.statusesHomeTimeline(parameters)
+mensions timeline: TwitterClient.tweets.statusesMentionsTimeline(parameters)
+user tweets: TwitterClient.tweets.statusesUserTimeline(parameters)
+user likes: TwitterClient.tweets.favoritesList(parameters)
+like: TwitterClient.tweets.favoritesCreate(parameters)
+unlike: TwitterClient.tweets.favoritesDestroy(parameters)
+delete tweet: TwitterClient.tweets.statusesDestroyById(parameters)
+upload media: TwitterClient.media.mediaUpload(parameters)
+
