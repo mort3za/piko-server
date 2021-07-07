@@ -8,3 +8,24 @@ userId sample: 73040500
 
 rate limits: https://developer.twitter.com/en/docs/twitter-api/v1/rate-limits
 
+API
+--------------
+get list timeline: TwitterClient.accountsAndUsers.listsStatuses(parameters)
+get subscribed lists: TwitterClient.accountsAndUsers.listsSubscriptions(parameters)
+add member to list: TwitterClient.accountsAndUsers.listsMembersCreate(parameters)
+remove member from list: TwitterClient.accountsAndUsers.listsMembersDestroy(parameters)
+subscribe to a list: TwitterClient.accountsAndUsers.listsSubscribersCreate(parameters)
+get pending follow requests: TwitterClient.accountsAndUsers.friendshipsIncoming(parameters)
+follow: TwitterClient.accountsAndUsers.friendshipsCreate(parameters)
+unfollow: TwitterClient.accountsAndUsers.friendshipsDestroy(parameters)
+disable retweets of someone: TwitterClient.accountsAndUsers.friendshipsUpdate(parameters)
+search: TwitterClient.tweets.search(parameters)
+create saved search: TwitterClient.accountsAndUsers.savedSearchesCreate(parameters)
+remove saved search: TwitterClient.accountsAndUsers.savedSearchesDestroyById(parameters)
+block: TwitterClient.accountsAndUsers.blocksCreate(parameters)
+mute: TwitterClient.accountsAndUsers.mutesUsersCreate(parameters)
+unmute: TwitterClient.accountsAndUsers.mutesUsersDestroy(parameters)
+report spam: TwitterClient.accountsAndUsers.usersReportSpam(parameters)
+retweet: TwitterClient.tweets.statusesRetweetById(parameters)
+unretweet: TwitterClient.tweets.statusesUnretweetById(parameters)
+tweet: TwitterClient.tweets.statusesUpdate(parameters)
