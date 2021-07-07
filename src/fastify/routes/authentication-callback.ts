@@ -2,10 +2,10 @@
 // http://localhost:6060/api/v1/authentication-callback?oauth_token=xxxxxx&oauth_verifier=xxxxxx
 
 import { cookieOptions } from "../constants/global";
-import { fetchAccessTokens } from "../functions/authentication";
+import { fetchAccessTokens, getTwitterClient } from "../functions/authentication";
 import { getSignedCookie } from "../functions/helpers";
 
-const { FRONTEND_BASE_URL } = process.env;
+const { FRONTEND_BASE_URL, TWITTER_API_KEY, TWITTER_API_SECRET } = process.env;
 
 const routes = async function routes(fastify, options) {
   fastify.get("/authentication-callback", authenticationCallback);
@@ -13,14 +13,26 @@ const routes = async function routes(fastify, options) {
 
 async function authenticationCallback(request, reply) {
   try {
-    const oauthTokenSecret = getSignedCookie(request, "oauthTokenSecret");
-    const oauthToken = getSignedCookie(request, "oauthToken");
-    const { oauth_verifier: oauthVerifier } = request.query;
+    const oauthToken = getSignedCookie(request, "oauth_token");
+    const oauthTokenSecret = getSignedCookie(request, "oauth_token_secret");
+    const { oauth_verifier } = request.query;
+
     const { accessToken, accessTokenSecret } = await fetchAccessTokens({
       oauthToken,
       oauthTokenSecret,
-      oauthVerifier,
+      oauthVerifier: oauth_verifier,
     });
+
+    // todo: use twitterClient instead (pending for issue https://github.com/FeedHive/twitter-api-client/issues/78)
+    // const twitterClient = getTwitterClient({
+    //   accessToken: oauthToken,
+    //   accessTokenSecret: oauthTokenSecret,
+    // });
+
+    // const data = await twitterClient.basics.oauthAccessToken({
+    //   oauth_verifier,
+    //   // oauth_token: oauthToken,
+    // } as any);
 
     const redirectUrl = `//${FRONTEND_BASE_URL}/home`;
     reply

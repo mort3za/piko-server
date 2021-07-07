@@ -1,5 +1,7 @@
 import { cookieOptions } from "../constants/global";
-import { getOauthTokens } from "../functions/authentication";
+import { getTwitterClient } from "../functions/authentication";
+
+const { OAUTH_CALLBACK_URL, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET } = process.env;
 
 const routes = async function routes(fastify, options) {
   fastify.get("/authenticate", authenticate);
@@ -7,14 +9,19 @@ const routes = async function routes(fastify, options) {
 
 async function authenticate(request, reply) {
   try {
-    const { oauthToken, oauthTokenSecret } = await getOauthTokens();
+    const twitterClient = getTwitterClient({
+      accessToken: TWITTER_ACCESS_TOKEN,
+      accessTokenSecret: TWITTER_ACCESS_TOKEN_SECRET,
+    });
+    const { oauth_token, oauth_token_secret } = await twitterClient.basics.oauthRequestToken({
+      oauth_callback: OAUTH_CALLBACK_URL,
+    });
 
-    const redirectUrl = "https://twitter.com/oauth/authorize?oauth_token=" + oauthToken;
     reply
-      .setCookie("oauthToken", oauthToken, cookieOptions)
-      .setCookie("oauthTokenSecret", oauthTokenSecret, cookieOptions)
+      .setCookie("oauth_token", oauth_token, cookieOptions)
+      .setCookie("oauth_token_secret", oauth_token_secret, cookieOptions)
       .code(302)
-      .redirect(redirectUrl);
+      .redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`);
   } catch (error) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
@@ -22,3 +29,6 @@ async function authenticate(request, reply) {
 }
 
 export default routes;
+
+// const resultAuthorize = await twitterClient.basics.oauthAuthorize();
+// console.log("resultAuthorize", resultAuthorize);

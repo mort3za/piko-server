@@ -9,10 +9,9 @@ const {
   TWITTER_API_KEY,
   // same as consumer_secret
   TWITTER_API_SECRET,
-  // TWITTER_ACCESS_TOKEN,
-  // TWITTER_ACCESS_TOKEN_SECRET,
 } = process.env;
 
+// todo: remove
 // Uses OAuth 1.0a
 export function getConsumerKeys(version = 2) {
   switch (version) {
@@ -38,6 +37,7 @@ export function getConsumerKeys(version = 2) {
   }
 }
 
+// todo: remove
 export function getOauthTokens(): Promise<{ oauthToken: string; oauthTokenSecret: string }> {
   return new Promise((resolve, reject) => {
     getConsumerKeys(1).getOAuthRequestToken(function (error, oauthToken, oauthTokenSecret, results) {
@@ -50,6 +50,7 @@ export function getOauthTokens(): Promise<{ oauthToken: string; oauthTokenSecret
   });
 }
 
+// todo: remove
 export function fetchAccessTokens({
   oauthToken,
   oauthTokenSecret,
