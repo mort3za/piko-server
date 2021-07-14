@@ -1,6 +1,6 @@
 import fastifyCors from "fastify-cors";
 
-const { NODE_ENV, FRONTEND_BASE_URL } = process.env;
+const { NODE_ENV, FRONTEND_BASE_HOSTNAME } = process.env;
 
 export function register(fastify) {
   const options = {
@@ -17,10 +17,12 @@ export function register(fastify) {
         cb(null, true);
         return;
       }
-      if (RegExp(FRONTEND_BASE_URL as string).test(origin)) {
+
+      if (RegExp(FRONTEND_BASE_HOSTNAME as string).test(origin)) {
         cb(null, true);
         return;
       }
+
       // Generate an error on other origins, disabling access
       cb(new Error("Not allowed."));
     },

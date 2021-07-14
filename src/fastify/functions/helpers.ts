@@ -1,5 +1,9 @@
 export function getSignedCookie(request, cookieName) {
-  const signedCookie = request.unsignCookie(request.cookies[cookieName]);
+  const rawCookie = request.cookies[cookieName];
+  if (!rawCookie) {
+    throw new Error(`${cookieName} cookie not provided.`);
+  }
+  const signedCookie = request.unsignCookie(rawCookie);
   if (!signedCookie.valid) {
     throw new Error(`Invalid signed cookie: ${cookieName}.`);
   }

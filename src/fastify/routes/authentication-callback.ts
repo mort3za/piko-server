@@ -1,6 +1,3 @@
-// fixme: remove
-// http://localhost:6060/api/v1/authentication-callback?oauth_token=xxxxxx&oauth_verifier=xxxxxx
-
 import { cookieOptions } from "../constants/global";
 import { fetchAccessTokens, getTwitterClient } from "../functions/authentication";
 import { getSignedCookie } from "../functions/helpers";
@@ -12,6 +9,7 @@ const routes = async function routes(fastify, options) {
 };
 
 async function authenticationCallback(request, reply) {
+  // api/v1/authentication-callback?oauth_token=xxxxxx&oauth_verifier=xxxxxx
   try {
     const oauthToken = getSignedCookie(request, "oauthToken");
     const oauthTokenSecret = getSignedCookie(request, "oauthTokenSecret");
@@ -42,7 +40,7 @@ async function authenticationCallback(request, reply) {
       .clearCookie("oauthTokenSecret", cookieOptions)
       .type("text/html")
       .send(
-        `<html><head><script>window.location.replace("${redirectUrl}")</script></head><body>Redirecting to <a href="${redirectUrl}">homepage</a>...</body></html>`,
+        `<html><head><script>window.location.replace("${redirectUrl}");</script></head><body>Redirecting to <a href="${redirectUrl}">homepage</a>...</body></html>`,
       );
   } catch (error) {
     console.log(error);

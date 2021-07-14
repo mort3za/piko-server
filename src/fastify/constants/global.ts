@@ -1,6 +1,7 @@
 export const cookieOptions = {
-  // set httpOnly to disable document.cookie access
+  sameSite: "none",
   httpOnly: true,
   path: "/",
   signed: true,
+  secure: true,
 };
