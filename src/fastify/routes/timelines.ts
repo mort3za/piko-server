@@ -22,7 +22,9 @@ async function latestStatuses(request, reply) {
 
 function _getOptions(request) {
   const MAX_COUNT = 100;
+
   const options = {
+    ...request.query,
     count: Math.min(request.query.count || 8, MAX_COUNT),
   };
   return options;
