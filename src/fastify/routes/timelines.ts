@@ -24,6 +24,8 @@ function _getOptions(request) {
   const MAX_COUNT = 100;
 
   const options = {
+    include_entities: true,
+    tweet_mode: "extended",
     ...request.query,
     count: Math.min(request.query.count || 8, MAX_COUNT),
   };
