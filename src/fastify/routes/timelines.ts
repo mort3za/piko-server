@@ -27,7 +27,7 @@ function _getOptions(request) {
     include_entities: true,
     tweet_mode: "extended",
     ...request.query,
-    count: Math.min(request.query.count || 8, MAX_COUNT),
+    count: Math.min(request.query.count || 20, MAX_COUNT),
   };
   return options;
 }
