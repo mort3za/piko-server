@@ -3,7 +3,7 @@ import { cookieOptions } from "../constants/global";
 const { FRONTEND_BASE_URL } = process.env;
 
 const routes = async function routes(fastify, options) {
-  fastify.get("/exit", logout);
+  fastify.get("/logout", logout);
 };
 
 async function logout(request, reply) {
