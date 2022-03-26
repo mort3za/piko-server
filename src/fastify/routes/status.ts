@@ -26,7 +26,7 @@ const routes = async function routes(fastify, options) {
       const twitterClient = getTwitterClient({ accessToken, accessTokenSecret });
 
       const { id } = request.params;
-      const status = await twitterClient.tweets.statusesShow({ id });
+      const status = await twitterClient.tweets.statusesShow({ id, tweet_mode: "extended" });
 
       reply.send(status);
     } catch (error) {
