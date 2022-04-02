@@ -32,7 +32,7 @@ async function authenticationCallback(request, reply) {
     //   // oauth_token: oauthToken,
     // } as any);
 
-    const redirectUrl = `//${FRONTEND_BASE_URL}/home`;
+    const redirectUrl = `${FRONTEND_BASE_URL}/home`;
     reply
       .setCookie("accessToken", accessToken, cookieOptions)
       .setCookie("accessTokenSecret", accessTokenSecret, cookieOptions)

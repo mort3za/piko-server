@@ -8,7 +8,7 @@ const routes = async function routes(fastify, options) {
 
 async function logout(request, reply) {
   try {
-    const redirectUrl = `//${FRONTEND_BASE_URL}/home`;
+    const redirectUrl = `${FRONTEND_BASE_URL}/home`;
 
     reply
       .clearCookie("accessToken", cookieOptions)
