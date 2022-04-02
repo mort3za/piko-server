@@ -16,11 +16,19 @@ import tweet from "../fastify/routes/status";
 
 const { API_PREFIX, LOG_LEVEL, COOKIE_SECRET } = process.env;
 
-const log = pino({ level: LOG_LEVEL, prettyPrint: true });
+const logger = pino({
+  level: LOG_LEVEL,
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+    },
+  },
+});
 function build() {
   // init
   const app = fastify({
-    logger: log,
+    logger,
   });
 
   // routes
