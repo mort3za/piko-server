@@ -41,6 +41,7 @@ function _getOptions(request) {
   const MAX_COUNT = 100;
 
   const options = {
+    exclude_replies: request.query.exclude_replies === "true",
     include_entities: true,
     tweet_mode: "extended",
     ...request.query,
