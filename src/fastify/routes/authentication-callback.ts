@@ -2,7 +2,7 @@ import { cookieOptions } from "../constants/global";
 import { fetchAccessTokens, getTwitterClient } from "../functions/authentication";
 import { getSignedCookie } from "../functions/helpers";
 
-const { FRONTEND_BASE_URL, TWITTER_API_KEY, TWITTER_API_SECRET } = process.env;
+const { FRONTEND_BASE_ORIGIN, TWITTER_API_KEY, TWITTER_API_SECRET } = process.env;
 
 const routes = async function routes(fastify, options) {
   fastify.get("/authentication-callback", authenticationCallback);
@@ -32,7 +32,7 @@ async function authenticationCallback(request, reply) {
     //   // oauth_token: oauthToken,
     // } as any);
 
-    const redirectUrl = `${FRONTEND_BASE_URL}/home`;
+    const redirectUrl = `${FRONTEND_BASE_ORIGIN}/home`;
     reply
       .setCookie("accessToken", accessToken, cookieOptions)
       .setCookie("accessTokenSecret", accessTokenSecret, cookieOptions)

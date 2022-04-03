@@ -1,6 +1,6 @@
 import { cookieOptions } from "../constants/global";
 
-const { FRONTEND_BASE_URL } = process.env;
+const { FRONTEND_BASE_ORIGIN } = process.env;
 
 const routes = async function routes(fastify, options) {
   fastify.get("/logout", logout);
@@ -8,7 +8,7 @@ const routes = async function routes(fastify, options) {
 
 async function logout(request, reply) {
   try {
-    const redirectUrl = `${FRONTEND_BASE_URL}/home`;
+    const redirectUrl = `${FRONTEND_BASE_ORIGIN}/home`;
 
     reply
       .clearCookie("accessToken", cookieOptions)
