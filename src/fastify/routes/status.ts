@@ -1,8 +1,20 @@
 import { getTwitterClient } from "../functions/authentication";
 import { readAccessTokens } from "../functions/helpers";
 
+const statusesPostOptions = {
+  schema: {
+    body: {
+      type: "object",
+      required: ["status"],
+      properties: {
+        status: { type: "string" },
+      },
+    },
+  },
+};
+
 const routes = async function routes(fastify, options) {
-  fastify.post("/statuses", statusPost);
+  fastify.post("/statuses", statusesPostOptions, statusPost);
   fastify.get("/statuses/:id", statusGet);
 
   async function statusPost(request, reply) {
@@ -14,7 +26,7 @@ const routes = async function routes(fastify, options) {
       const { id, lang } = await twitterClient.tweets.statusesUpdate(status);
 
       reply.send({ id, lang });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
     }
@@ -29,7 +41,7 @@ const routes = async function routes(fastify, options) {
       const status = await twitterClient.tweets.statusesShow({ id, tweet_mode: "extended" });
 
       reply.send(status);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
     }

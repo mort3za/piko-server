@@ -17,12 +17,11 @@
   "license": "MIT",
   "dependencies": {
     "date-fns": "^2.28.0",
-    "fastify": "^3.27.4",
+    "fastify": "^3.28.0",
     "fastify-cookie": "^5.6.0",
     "fastify-cors": "^6.0.3",
     "lodash-es": "^4.17.21",
     "node-fetch": "^3.2.3",
-    "oauth": "^0.9.15",
     "pino": "^7.9.2",
     "twitter-api-client": "^1.5.2"
   },

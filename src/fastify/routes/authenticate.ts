@@ -22,7 +22,7 @@ async function authenticate(request, reply) {
       .setCookie("oauthTokenSecret", oauth_token_secret, cookieOptions)
       .code(302)
       .redirect(`https://api.twitter.com/oauth/authenticate?oauth_token=${oauth_token}`);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
   }
