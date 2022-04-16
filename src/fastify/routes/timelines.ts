@@ -61,8 +61,6 @@ function _getOptions(request) {
     tweet_mode: "extended",
     ...request.query,
     count: Math.min(request.query.count || 20, MAX_COUNT),
-    // for profile:
-    screen_name: request.query.screen_name,
   };
   return options;
 }
