@@ -7,7 +7,7 @@ const statusesPostOptions = {
       type: "object",
       required: ["status"],
       properties: {
-        status: { type: "string" },
+        status: { type: "object" },
       },
     },
   },
