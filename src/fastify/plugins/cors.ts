@@ -1,4 +1,4 @@
-import fastifyCors from "fastify-cors";
+import fastifyCors from "@fastify/cors";
 
 const { NODE_ENV, FRONTEND_BASE_HOSTNAME } = process.env;
 

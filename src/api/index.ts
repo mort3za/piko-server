@@ -3,7 +3,7 @@
 
 import fastify from "fastify";
 import pino from "pino";
-import fastifyCookie, { FastifyCookieOptions } from "fastify-cookie";
+import fastifyCookie, { FastifyCookieOptions } from "@fastify/cookie";
 import { register as registerCorsPlugin } from "../fastify/plugins/cors";
 
 // routes
