@@ -16,14 +16,15 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@fastify/cookie": "^7.3.1",
+    "@fastify/cookie": "^8.0.0",
     "@fastify/cors": "^8.0.0",
     "date-fns": "^2.28.0",
     "fastify": "^4.3.0",
     "lodash-es": "^4.17.21",
     "node-fetch": "^3.2.3",
     "pino": "^7.9.2",
-    "twitter-api-client": "^1.6.0"
+    "twitter-api-client": "^1.6.0",
+    "twitter-api-sdk": "github:mort3za/twitter-api-typescript-sdk"
   },
   "devDependencies": {
     "@vercel/node": "^1.14.0",

@@ -4,7 +4,7 @@ const routes = async function routes(fastify, options) {
   async function __sayHi(request, reply) {
     try {
       reply.send({ hi: true });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
     }

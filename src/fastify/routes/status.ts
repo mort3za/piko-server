@@ -1,4 +1,4 @@
-import { getTwitterClient } from "../functions/authentication";
+// import { getTwitterClient } from "../functions/authentication";
 import { readAccessTokens } from "../functions/helpers";
 
 const statusesPostOptions = {
@@ -14,8 +14,8 @@ const statusesPostOptions = {
 };
 
 const routes = async function routes(fastify, options) {
-  fastify.post("/statuses", statusesPostOptions, statusPost);
-  fastify.get("/statuses/:id", statusGet);
+  // fastify.post("/statuses", statusesPostOptions, statusPost);
+  // fastify.get("/statuses/:id", statusGet);
 
   async function statusPost(request, reply) {
     try {

@@ -10,16 +10,15 @@ export function getSignedCookie(request, cookieName) {
   return signedCookie.value;
 }
 
-export function readAccessTokens(request): { accessToken: string; accessTokenSecret: string } {
-  if (!request.cookies.accessToken || !request.cookies.accessTokenSecret) {
+export function readToken(request): { token: any } {
+  if (!request.cookies.token) {
     throw responseError({ statusCode: 401, message: "You are not logged in." });
   }
-  const accessToken = getSignedCookie(request, "accessToken");
-  const accessTokenSecret = getSignedCookie(request, "accessTokenSecret");
-  if (!accessToken || !accessTokenSecret) {
+  const token = getSignedCookie(request, "token");
+  if (!token) {
     throw responseError({ statusCode: 401, message: "You are not logged in." });
   }
-  return { accessToken, accessTokenSecret };
+  return { token };
 }
 
 export function responseError({ statusCode = 400, message = "", messages = [] }) {

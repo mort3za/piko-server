@@ -1,8 +1,8 @@
-import { getTwitterClient } from "../functions/authentication";
+// import { getTwitterClient } from "../functions/authentication";
 import { readAccessTokens } from "../functions/helpers";
 
 const routes = async function routes(fastify, options) {
-  fastify.get("/lists/list", listsList);
+  // fastify.get("/lists/list", listsList);
 };
 
 async function listsList(request, reply) {
