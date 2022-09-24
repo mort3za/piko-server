@@ -1,4 +1,5 @@
 // import { getTwitterClient } from "../functions/authentication";
+import { User } from "twitter-api-client/dist/interfaces/types/ListsListTypes";
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
 import { readToken } from "../functions/helpers";
@@ -16,23 +17,78 @@ async function latestStatuses(request, reply) {
   try {
     const { token: tokenString } = readToken(request);
     const token = JSON.parse(tokenString);
-    console.log("token", typeof token, Object.keys(token));
+    console.log("token", typeof token, token);
 
     const authClient = getAuthClient(token);
     const client = new Client(authClient);
-    console.log("client", client);
+    // console.log("client", client);
 
-    // const options = _getOptions(request);
-    const tweet = await client.tweets.findTweetsById({
-      ids: ["1544436283019337730"],
-      "tweet.fields": ["author_id"],
+    // const tweet = await client.tweets.findTweetsById({
+    //   ids: ["1544436283019337730"],
+    //   "tweet.fields": ["author_id"],
+    // });
+
+    const user = (
+      await client.users.findMyUser({
+        "user.fields": [
+          "created_at",
+          "description",
+          "entities",
+          "id",
+          "location",
+          "name",
+          "pinned_tweet_id",
+          "profile_image_url",
+          "protected",
+          // "public_metrics",
+          "url",
+          "username",
+          "verified",
+          "withheld",
+        ],
+      })
+    ).data;
+    const userId = String(user?.id);
+
+    const params = _getOptionsV2(request);
+    // fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
+    const tweets = await client.tweets.usersIdTimeline(userId, {
+      expansions: ["referenced_tweets.id"],
+      // ...params,
+      max_results: 10,
+      "media.fields": [
+        "duration_ms",
+        "height",
+        "media_key",
+        "preview_image_url",
+        "type",
+        "url",
+        "width",
+        "alt_text",
+        "variants",
+      ],
+      "tweet.fields": [
+        "attachments",
+        "author_id",
+        "context_annotations",
+        "conversation_id",
+        "created_at",
+        "entities",
+        "geo",
+        "id",
+        "in_reply_to_user_id",
+        "lang",
+        "possibly_sensitive",
+        "referenced_tweets",
+        "reply_settings",
+        "source",
+        "text",
+        "withheld",
+      ],
     });
-    // for await (const tweet of stream) {
-    //   console.log(tweet.data?.author_id);
-    // }
-    console.log("tweet", tweet);
+    console.log("tweets", tweets);
 
-    reply.send({ data: tweet });
+    reply.send({ data: tweets });
   } catch (error: any) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
