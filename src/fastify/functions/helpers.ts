@@ -18,7 +18,7 @@ export function readToken(request): { token: any } {
   if (!token) {
     throw responseError({ statusCode: 401, message: "You are not logged in." });
   }
-  return { token };
+  return { token: JSON.parse(token) };
 }
 
 export function responseError({ statusCode = 400, message = "", messages = [] }) {

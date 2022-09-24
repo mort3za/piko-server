@@ -3,13 +3,29 @@ import { User } from "twitter-api-client/dist/interfaces/types/ListsListTypes";
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
 import { readToken } from "../functions/helpers";
+import { cookieOptions } from "../constants/global";
 
 const routes = async function routes(fastify, options) {
+  fastify.get("/refresh-token", refreshToken);
   fastify.get("/timelines/latest-statuses", latestStatuses);
   // fastify.get("/timelines/profile-statuses", profileStatuses);
   // fastify.get("/timelines/list-statuses", listStatuses);
   // fastify.get("/timelines/search-statuses", searchStatuses);
 };
+
+async function refreshToken(request, reply) {
+  try {
+    const { token } = readToken(request);
+
+    const authClient = getAuthClient(token);
+    await authClient.refreshAccessToken();
+
+    reply.setCookie("token", JSON.stringify(authClient.token), cookieOptions).send({ code: 200 });
+  } catch (error: any) {
+    console.log(error);
+    reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
+  }
+}
 
 async function latestStatuses(request, reply) {
   console.log("-------------------------------------------------------");
