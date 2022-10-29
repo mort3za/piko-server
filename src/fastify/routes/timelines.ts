@@ -1,14 +1,14 @@
 // import { getTwitterClient } from "../functions/authentication";
-import { User } from "twitter-api-client/dist/interfaces/types/ListsListTypes";
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
 import { readToken } from "../functions/helpers";
 import { cookieOptions } from "../constants/global";
+import { RequestOptions } from "twitter-api-sdk/dist/request";
 
 const routes = async function routes(fastify, options) {
   fastify.get("/refresh-token", refreshToken);
   fastify.get("/timelines/latest-statuses", latestStatuses);
-  // fastify.get("/timelines/profile-statuses", profileStatuses);
+  fastify.get("/timelines/profile-statuses", profileStatuses);
   // fastify.get("/timelines/list-statuses", listStatuses);
   // fastify.get("/timelines/search-statuses", searchStatuses);
 };
@@ -16,7 +16,6 @@ const routes = async function routes(fastify, options) {
 async function refreshToken(request, reply) {
   try {
     const { token } = readToken(request);
-
     const authClient = getAuthClient(token);
     await authClient.refreshAccessToken();
 
@@ -27,82 +26,83 @@ async function refreshToken(request, reply) {
   }
 }
 
-async function latestStatuses(request, reply) {
-  console.log("-------------------------------------------------------");
+const fields: Partial<RequestOptions["params"]> = {
+  expansions: ["referenced_tweets.id"],
+  // ...params,
+  max_results: 10,
+  // pagination_token: "7140dibdnow9c7btw423x5552cqhwjkhi2qy68as4l92u",
+  "media.fields": [
+    "duration_ms",
+    "height",
+    "media_key",
+    "preview_image_url",
+    "type",
+    "url",
+    "width",
+    "alt_text",
+    "variants",
+  ],
+  "place.fields": [
+    "contained_within",
+    "country",
+    "country_code",
+    "full_name",
+    "geo",
+    "id",
+    "name",
+    "place_type",
+  ],
+  "poll.fields": ["duration_minutes", "end_datetime", "id", "options", "voting_status"],
+  "tweet.fields": [
+    "attachments",
+    "author_id",
+    "context_annotations",
+    "conversation_id",
+    "created_at",
+    "entities",
+    "geo",
+    "id",
+    "in_reply_to_user_id",
+    "lang",
+    "possibly_sensitive",
+    "referenced_tweets",
+    "reply_settings",
+    "source",
+    "text",
+    "withheld",
+  ],
+};
 
+async function getUserId(client) {
+  const { data } = await client.users.findMyUser({
+    "user.fields": ["id"],
+    // "created_at",
+    // "description",
+    // "entities",
+    // "location",
+    // "name",
+    // "pinned_tweet_id",
+    // "profile_image_url",
+    // "protected",
+    // "public_metrics",
+    // "url",
+    // "username",
+    // "verified",
+    // "withheld",
+  });
+  return String(data?.id);
+}
+
+async function latestStatuses(request, reply) {
   try {
     const { token } = readToken(request);
 
-    console.log("token", typeof token, token);
-
     const authClient = getAuthClient(token);
     const client = new Client(authClient);
-    // console.log("client", client);
+    const userId = await getUserId(client);
 
-    // const tweet = await client.tweets.findTweetsById({
-    //   ids: ["1544436283019337730"],
-    //   "tweet.fields": ["author_id"],
-    // });
-
-    const user = (
-      await client.users.findMyUser({
-        "user.fields": [
-          "created_at",
-          "description",
-          "entities",
-          "id",
-          "location",
-          "name",
-          "pinned_tweet_id",
-          "profile_image_url",
-          "protected",
-          // "public_metrics",
-          "url",
-          "username",
-          "verified",
-          "withheld",
-        ],
-      })
-    ).data;
-    const userId = String(user?.id);
-
-    const params = _getOptionsV2(request);
     // fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
-    const tweets = await client.tweets.usersIdTimeline(userId, {
-      expansions: ["referenced_tweets.id"],
-      // ...params,
-      max_results: 10,
-      "media.fields": [
-        "duration_ms",
-        "height",
-        "media_key",
-        "preview_image_url",
-        "type",
-        "url",
-        "width",
-        "alt_text",
-        "variants",
-      ],
-      "tweet.fields": [
-        "attachments",
-        "author_id",
-        "context_annotations",
-        "conversation_id",
-        "created_at",
-        "entities",
-        "geo",
-        "id",
-        "in_reply_to_user_id",
-        "lang",
-        "possibly_sensitive",
-        "referenced_tweets",
-        "reply_settings",
-        "source",
-        "text",
-        "withheld",
-      ],
-    });
-    console.log("tweets", tweets);
+    const tweets = await client.tweets.usersIdTimeline(userId, fields);
 
     reply.send({ data: tweets });
   } catch (error: any) {
@@ -111,20 +111,22 @@ async function latestStatuses(request, reply) {
   }
 }
 
-// async function profileStatuses(request, reply) {
-//   try {
-//     const {token} = readToken(request);
-//     const twitterClient = getTwitterClient({token});
+async function profileStatuses(request, reply) {
+  try {
+    const { token } = readToken(request);
 
-//     const options = _getOptions(request);
-//     const data = await twitterClient.tweets.statusesUserTimeline(options);
+    const authClient = getAuthClient(token);
+    const client = new Client(authClient);
+    const options = _getOptionsV2(request);
 
-//     reply.send(data);
-//   } catch (error) {
-//     console.log(error);
-//     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
-//   }
-// }
+    const tweets = await client.tweets.usersIdTweets(request.query.userId, options);
+
+    reply.send(tweets);
+  } catch (error: any) {
+    console.log(error);
+    reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
+  }
+}
 
 // async function listStatuses(request, reply) {
 //   try {
@@ -155,19 +157,6 @@ async function latestStatuses(request, reply) {
 //     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
 //   }
 // }
-
-function _getOptions(request) {
-  const MAX_COUNT = 100;
-
-  const options = {
-    exclude_replies: request.query.exclude_replies === "true",
-    include_entities: true,
-    tweet_mode: "extended",
-    ...request.query,
-    count: Math.min(request.query.count || 20, MAX_COUNT),
-  };
-  return options;
-}
 
 function _getOptionsV2(request) {
   const MAX_COUNT = 100;

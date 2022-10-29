@@ -33,6 +33,11 @@ const routes = async function routes(fastify, options) {
   }
 
   async function statusGet(request, reply) {
+    // const tweet = await client.tweets.findTweetsById({
+    //   ids: ["1544436283019337730"],
+    //   "tweet.fields": ["author_id"],
+    // });
+
     try {
       const { accessToken, accessTokenSecret } = readAccessTokens(request);
       const twitterClient = getTwitterClient({ accessToken, accessTokenSecret });
