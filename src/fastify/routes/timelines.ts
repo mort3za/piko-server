@@ -31,8 +31,8 @@ async function latestStatuses(request, reply) {
   console.log("-------------------------------------------------------");
 
   try {
-    const { token: tokenString } = readToken(request);
-    const token = JSON.parse(tokenString);
+    const { token } = readToken(request);
+
     console.log("token", typeof token, token);
 
     const authClient = getAuthClient(token);
