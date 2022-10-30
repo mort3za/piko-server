@@ -27,7 +27,7 @@ async function refreshToken(request, reply) {
 }
 
 const fields: Partial<RequestOptions["params"]> = {
-  expansions: ["referenced_tweets.id"],
+  expansions: ["referenced_tweets.id", "author_id"],
   // ...params,
   max_results: 10,
   // pagination_token: "7140dibdnow9c7btw423x5552cqhwjkhi2qy68as4l92u",
@@ -53,10 +53,26 @@ const fields: Partial<RequestOptions["params"]> = {
     "place_type",
   ],
   "poll.fields": ["duration_minutes", "end_datetime", "id", "options", "voting_status"],
+  "user.fields": [
+    // "created_at",
+    // "description",
+    // "entities",
+    "id",
+    // "location",
+    "name",
+    // "pinned_tweet_id",
+    "profile_image_url",
+    "protected",
+    // "public_metrics",
+    "url",
+    "username",
+    "verified",
+    // "withheld",
+  ],
   "tweet.fields": [
     "attachments",
     "author_id",
-    "context_annotations",
+    // "context_annotations",
     "conversation_id",
     "created_at",
     "entities",
