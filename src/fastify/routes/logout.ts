@@ -1,4 +1,4 @@
-import { expiredCookieOptions } from "../constants/global";
+import { cookieOptions } from "../constants/global";
 
 const { FRONTEND_BASE_ORIGIN } = process.env;
 
@@ -11,9 +11,9 @@ async function logout(request, reply) {
     const redirectUrl = `${FRONTEND_BASE_ORIGIN}/login`;
 
     reply
-      .setCookie("accessToken", "", expiredCookieOptions)
-      .setCookie("accessTokenSecret", "", expiredCookieOptions)
-      .setCookie("token", "", expiredCookieOptions)
+      .clearCookie("accessToken", cookieOptions)
+      .clearCookie("accessTokenSecret", cookieOptions)
+      .clearCookie("token", cookieOptions)
       .code(302)
       .type("text/html")
       .send(

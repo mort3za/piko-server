@@ -1,6 +1,5 @@
 import { cookieOptions } from "../constants/global";
 import { getAuthClient } from "../functions/authentication";
-import { getSignedCookie } from "../functions/helpers";
 
 const { FRONTEND_BASE_ORIGIN } = process.env;
 

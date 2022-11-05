@@ -7,8 +7,3 @@ export const cookieOptions = {
   secure: true,
   expires: new Date(Date.now() + oneMonth),
 };
-
-export const expiredCookieOptions = {
-  ...cookieOptions,
-  expires: new Date(0),
-};

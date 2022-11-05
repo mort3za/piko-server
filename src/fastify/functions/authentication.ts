@@ -8,7 +8,10 @@ const { TWITTER_OAUTH2___CLIENT_ID, TWITTER_OAUTH2___CLIENT_SECRET, OAUTH_CALLBA
 
 export function getAuthClient(request?: any, code_challenge: string = "twitter-link") {
   let token = undefined;
-  if (request) token = readToken(request)?.token;
+
+  if (request) {
+    token = readToken(request).token;
+  }
 
   const authClient = new auth.OAuth2User(
     {

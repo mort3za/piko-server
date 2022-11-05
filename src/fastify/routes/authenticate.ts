@@ -1,4 +1,4 @@
-import { cookieOptions, expiredCookieOptions } from "../constants/global";
+import { cookieOptions } from "../constants/global";
 import { getAuthClient } from "../functions/authentication";
 // import { getTwitterClient } from "../functions/authentication";
 
@@ -17,7 +17,7 @@ async function refreshToken(request, reply) {
     reply.setCookie("token", JSON.stringify(authClient.token), cookieOptions).send({ code: 200 });
   } catch (error: any) {
     console.log(error);
-    reply.setCookie("token", "", expiredCookieOptions).code(400).send({ message: error?.message });
+    reply.clearCookie("token", cookieOptions).code(401).send({ message: error?.message });
   }
 }
 
