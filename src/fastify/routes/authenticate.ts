@@ -1,12 +1,32 @@
-import { cookieOptions } from "../constants/global";
+import { cookieOptions, expiredCookieOptions } from "../constants/global";
 import { getAuthClient } from "../functions/authentication";
+import { readToken } from "../functions/helpers";
 // import { getTwitterClient } from "../functions/authentication";
 
 // const { OAUTH_CALLBACK_URL, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET } = process.env;
 
 const routes = async function routes(fastify, options) {
+  fastify.get("/refresh-token", refreshToken);
   fastify.get("/authenticate", authenticate);
 };
+
+async function refreshToken(request, reply) {
+  try {
+    const { token } = readToken(request);
+    console.log("------------------- token", token);
+
+    const authClient = getAuthClient(token);
+    await authClient.refreshAccessToken();
+
+    reply.setCookie("token", JSON.stringify(authClient.token), cookieOptions).send({ code: 200 });
+  } catch (error: any) {
+    console.log(error);
+    reply
+      .setCookie("token", "", expiredCookieOptions)
+      .code(error?.statusCode || 498)
+      .send({ message: error?.message, code: error?.code });
+  }
+}
 
 async function authenticate(request, reply) {
   // ------------------------------------------------------
