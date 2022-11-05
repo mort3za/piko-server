@@ -10,6 +10,7 @@ const routes = async function routes(fastify, options) {
   // fastify.get("/timelines/search-statuses", searchStatuses);
 };
 
+// fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
 const fields: Partial<RequestOptions["params"]> = {
   expansions: ["referenced_tweets.id", "author_id"],
   // ...params,
@@ -57,10 +58,11 @@ const fields: Partial<RequestOptions["params"]> = {
     "attachments",
     "author_id",
     // "context_annotations",
+    "public_metrics",
     "conversation_id",
     "created_at",
     "entities",
-    "geo",
+    // "geo",
     "id",
     "in_reply_to_user_id",
     "lang",
@@ -99,7 +101,6 @@ async function latestStatuses(request, reply) {
     const client = new Client(authClient);
     const userId = await getUserId(client);
 
-    // fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
     const tweets = await client.tweets.usersIdTimeline(userId, fields);
 
     reply.send({ data: tweets });
