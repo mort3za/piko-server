@@ -15,11 +15,9 @@ async function authenticationCallback(request, reply) {
     if (!oauthReturnCode || !oauthReturnState) {
       throw new Error("Invalid OAuth 2.0 callback parameters.");
     }
-    console.log("oauthReturnCode", oauthReturnCode);
 
     const authClient = getAuthClient();
     await authClient.requestAccessToken(oauthReturnCode as string);
-    console.log("==============================", authClient);
 
     // -------------------------------------------------
     const redirectUrl = `${FRONTEND_BASE_ORIGIN}/home`;

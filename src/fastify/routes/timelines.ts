@@ -1,7 +1,6 @@
 // import { getTwitterClient } from "../functions/authentication";
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
-import { readToken } from "../functions/helpers";
 import { RequestOptions } from "twitter-api-sdk/dist/request";
 
 const routes = async function routes(fastify, options) {
@@ -96,9 +95,7 @@ async function getUserId(client) {
 
 async function latestStatuses(request, reply) {
   try {
-    const { token } = readToken(request);
-
-    const authClient = getAuthClient(token);
+    const authClient = getAuthClient(request);
     const client = new Client(authClient);
     const userId = await getUserId(client);
 
@@ -114,9 +111,7 @@ async function latestStatuses(request, reply) {
 
 async function profileStatuses(request, reply) {
   try {
-    const { token } = readToken(request);
-
-    const authClient = getAuthClient(token);
+    const authClient = getAuthClient(request);
     const client = new Client(authClient);
     const options = _getOptionsV2(request);
 
@@ -131,8 +126,7 @@ async function profileStatuses(request, reply) {
 
 // async function listStatuses(request, reply) {
 //   try {
-//     const {token} = readToken(request);
-//     const twitterClient = getTwitterClient({token});
+//     const twitterClient = getTwitterClient(request);
 
 //     const options = _getOptions(request);
 //     const data = await twitterClient.accountsAndUsers.listsStatuses(options);
@@ -146,8 +140,7 @@ async function profileStatuses(request, reply) {
 
 // async function searchStatuses(request, reply) {
 //   try {
-//     const {token} = readToken(request);
-//     const twitterClient = getTwitterClient({token});
+//     const twitterClient = getTwitterClient(request);
 
 //     const options = _getOptionsV2(request);
 //     const data = await twitterClient.tweetsV2.searchRecentTweets(options);

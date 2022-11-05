@@ -10,8 +10,9 @@ export function getSignedCookie(request, cookieName) {
   return signedCookie.value;
 }
 
-export function readToken(request): { token: any } {
+export function readToken(request, silent = false): { token: any } {
   if (!request.cookies.token) {
+    if (silent) return { token: "" };
     throw responseError({ statusCode: 401, message: "You are not logged in." });
   }
   const token = getSignedCookie(request, "token");

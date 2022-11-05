@@ -1,11 +1,15 @@
 // import { TwitterClient } from "twitter-api-client";
 import { auth } from "twitter-api-sdk";
+import { readToken } from "./helpers";
 
 // documentation: https://developer.twitter.com/en/docs/authentication/overview
 
 const { TWITTER_OAUTH2___CLIENT_ID, TWITTER_OAUTH2___CLIENT_SECRET, OAUTH_CALLBACK_URL } = process.env;
 
-export function getAuthClient(token?: any, code_challenge: string = "twitter-link") {
+export function getAuthClient(request?: any, code_challenge: string = "twitter-link") {
+  let token = undefined;
+  if (request) token = readToken(request)?.token;
+
   const authClient = new auth.OAuth2User(
     {
       client_id: TWITTER_OAUTH2___CLIENT_ID as string,
