@@ -7,7 +7,7 @@ import { RequestOptions } from "twitter-api-sdk/dist/request";
 const routes = async function routes(fastify, options) {
   fastify.get("/timelines/latest-statuses", latestStatuses);
   fastify.get("/timelines/profile-statuses", profileStatuses);
-  // fastify.get("/timelines/list-statuses", listStatuses);
+  fastify.get("/timelines/list-statuses", listStatuses);
   // fastify.get("/timelines/search-statuses", searchStatuses);
 };
 
@@ -87,7 +87,7 @@ async function latestStatuses(request, reply) {
 
     const tweets = await client.tweets.usersIdTimeline(userId, { ...fields, ...options });
 
-    reply.send({ data: tweets });
+    reply.send(tweets);
   } catch (error: any) {
     console.log(error);
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
@@ -100,7 +100,7 @@ async function profileStatuses(request, reply) {
     const client = new Client(authClient);
     const options = _getOptionsV2(request);
 
-    const tweets = await client.tweets.usersIdTweets(request.query.userId, options);
+    const tweets = await client.tweets.usersIdTweets(request.query.userId, { ...fields, ...options });
 
     reply.send(tweets);
   } catch (error: any) {
@@ -109,19 +109,20 @@ async function profileStatuses(request, reply) {
   }
 }
 
-// async function listStatuses(request, reply) {
-//   try {
-//     const twitterClient = getTwitterClient(request);
+async function listStatuses(request, reply) {
+  try {
+    const authClient = getAuthClient(request);
+    const client = new Client(authClient);
+    const options = _getOptionsV2(request);
 
-//     const options = _getOptions(request);
-//     const data = await twitterClient.accountsAndUsers.listsStatuses(options);
+    const tweets = await client.tweets.listsIdTweets(request.query.list_id, { ...fields, ...options });
 
-//     reply.send(data);
-//   } catch (error) {
-//     console.log(error);
-//     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
-//   }
-// }
+    reply.send(tweets);
+  } catch (error: any) {
+    console.log(error);
+    reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
+  }
+}
 
 // async function searchStatuses(request, reply) {
 //   try {
@@ -143,6 +144,7 @@ function _getOptionsV2(request) {
   const options = {
     ...request.query,
     max_results: Math.min(request.query.count || 20, MAX_COUNT),
+    list_id: undefined,
   };
   return options;
 }
