@@ -2,7 +2,8 @@
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
 import { getUserId } from "../functions/helpers";
-import { RequestOptions } from "twitter-api-sdk/dist/request";
+import { components } from "twitter-api-sdk/dist/types";
+import { unionBy } from "lodash";
 
 const routes = async function routes(fastify, options) {
   fastify.get("/timelines/latest-statuses", latestStatuses);
@@ -12,7 +13,16 @@ const routes = async function routes(fastify, options) {
 };
 
 // fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
-const fields: Partial<RequestOptions["params"]> = {
+const userFields: components["parameters"]["UserFieldsParameter"] = [
+  "id",
+  "name",
+  "profile_image_url",
+  "protected",
+  "url",
+  "username",
+  "verified",
+];
+const fields = {
   expansions: ["referenced_tweets.id", "author_id", "attachments.media_keys"],
   // ...params,
   max_results: 10,
@@ -39,22 +49,7 @@ const fields: Partial<RequestOptions["params"]> = {
     "place_type",
   ],
   "poll.fields": ["duration_minutes", "end_datetime", "id", "options", "voting_status"],
-  "user.fields": [
-    // "created_at",
-    // "description",
-    // "entities",
-    "id",
-    // "location",
-    "name",
-    // "pinned_tweet_id",
-    "profile_image_url",
-    "protected",
-    // "public_metrics",
-    "url",
-    "username",
-    "verified",
-    // "withheld",
-  ],
+  "user.fields": userFields,
   "tweet.fields": [
     "attachments",
     "author_id",
@@ -76,6 +71,21 @@ const fields: Partial<RequestOptions["params"]> = {
   ],
 };
 
+async function includeAllUsers(client, tweets) {
+  const userIds = (tweets.includes?.tweets?.map((tw) => tw.author_id).filter(Boolean) ??
+    []) as components["schemas"]["UserId"][];
+  const users = (
+    await client.users.findUsersById({
+      ids: userIds,
+      "user.fields": userFields,
+    })
+  ).data;
+  const tweetsUsers = unionBy(tweets.includes?.users, users, "id");
+  tweets.includes = tweets.includes ?? {};
+  tweets.includes.users = tweetsUsers;
+  return tweets;
+}
+
 async function latestStatuses(request, reply) {
   try {
     const authClient = getAuthClient(request);
@@ -85,7 +95,8 @@ async function latestStatuses(request, reply) {
 
     const options = _getOptionsV2(request);
 
-    const tweets = await client.tweets.usersIdTimeline(userId, { ...fields, ...options });
+    let tweets = await client.tweets.usersIdTimeline(userId, { ...fields, ...options });
+    tweets = await includeAllUsers(client, tweets);
 
     reply.send(tweets);
   } catch (error: any) {
@@ -100,7 +111,8 @@ async function profileStatuses(request, reply) {
     const client = new Client(authClient);
     const options = _getOptionsV2(request);
 
-    const tweets = await client.tweets.usersIdTweets(request.query.userId, { ...fields, ...options });
+    let tweets = await client.tweets.usersIdTweets(request.query.userId, { ...fields, ...options });
+    tweets = await includeAllUsers(client, tweets);
 
     reply.send(tweets);
   } catch (error: any) {
@@ -114,8 +126,9 @@ async function listStatuses(request, reply) {
     const authClient = getAuthClient(request);
     const client = new Client(authClient);
     const options = _getOptionsV2(request);
-
-    const tweets = await client.tweets.listsIdTweets(request.query.list_id, { ...fields, ...options });
+    // fixme: pagination params are not in response.meta
+    let tweets = await client.tweets.listsIdTweets(request.query.list_id, { ...fields, ...options });
+    tweets = await includeAllUsers(client, tweets);
 
     reply.send(tweets);
   } catch (error: any) {
@@ -123,20 +136,6 @@ async function listStatuses(request, reply) {
     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
   }
 }
-
-// async function searchStatuses(request, reply) {
-//   try {
-//     const twitterClient = getTwitterClient(request);
-
-//     const options = _getOptionsV2(request);
-//     const data = await twitterClient.tweetsV2.searchRecentTweets(options);
-
-//     reply.send(data);
-//   } catch (error) {
-//     console.log(error);
-//     reply.code(error?.statusCode || 500).send({ message: error?.message, code: error?.code });
-//   }
-// }
 
 function _getOptionsV2(request) {
   const MAX_COUNT = 100;

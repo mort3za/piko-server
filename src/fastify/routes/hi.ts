@@ -1,3 +1,6 @@
+// import { unionBy } from "lodash";
+// console.log("unionBy", unionBy);
+
 const routes = async function routes(fastify, options) {
   fastify.get("/hi", __sayHi);
 
