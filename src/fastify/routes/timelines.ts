@@ -1,6 +1,7 @@
 // import { getTwitterClient } from "../functions/authentication";
 import { Client } from "twitter-api-sdk";
 import { getAuthClient } from "../functions/authentication";
+import { getUserId } from "../functions/helpers";
 import { RequestOptions } from "twitter-api-sdk/dist/request";
 
 const routes = async function routes(fastify, options) {
@@ -12,7 +13,7 @@ const routes = async function routes(fastify, options) {
 
 // fields: https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets#tab2
 const fields: Partial<RequestOptions["params"]> = {
-  expansions: ["referenced_tweets.id", "author_id"],
+  expansions: ["referenced_tweets.id", "author_id", "attachments.media_keys"],
   // ...params,
   max_results: 10,
   // pagination_token: "7140dibdnow9c7btw423x5552cqhwjkhi2qy68as4l92u",
@@ -75,33 +76,16 @@ const fields: Partial<RequestOptions["params"]> = {
   ],
 };
 
-async function getUserId(client) {
-  const { data } = await client.users.findMyUser({
-    "user.fields": ["id"],
-    // "created_at",
-    // "description",
-    // "entities",
-    // "location",
-    // "name",
-    // "pinned_tweet_id",
-    // "profile_image_url",
-    // "protected",
-    // "public_metrics",
-    // "url",
-    // "username",
-    // "verified",
-    // "withheld",
-  });
-  return String(data?.id);
-}
-
 async function latestStatuses(request, reply) {
   try {
     const authClient = getAuthClient(request);
     const client = new Client(authClient);
+    // todo: get userId from FE to speedup
     const userId = await getUserId(client);
 
-    const tweets = await client.tweets.usersIdTimeline(userId, fields);
+    const options = _getOptionsV2(request);
+
+    const tweets = await client.tweets.usersIdTimeline(userId, { ...fields, ...options });
 
     reply.send({ data: tweets });
   } catch (error: any) {

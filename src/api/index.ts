@@ -13,7 +13,7 @@ import logout from "../fastify/routes/logout";
 import authenticationCallback from "../fastify/routes/authentication-callback";
 import timelines from "../fastify/routes/timelines";
 // import status from "../fastify/routes/status";
-// import lists from "../fastify/routes/lists";
+import lists from "../fastify/routes/lists";
 
 const { API_PREFIX, LOG_LEVEL, COOKIE_SECRET } = process.env;
 
@@ -39,7 +39,7 @@ function build() {
   app.register(authenticationCallback, { prefix: API_PREFIX });
   app.register(timelines, { prefix: API_PREFIX });
   // app.register(status, { prefix: API_PREFIX });
-  // app.register(lists, { prefix: API_PREFIX });
+  app.register(lists, { prefix: API_PREFIX });
 
   // register plugins
   registerCorsPlugin(app);

@@ -25,3 +25,23 @@ export function readToken(request, silent = false): { token: any } {
 export function responseError({ statusCode = 400, message = "", messages = [] }) {
   return { error: true, statusCode, message, messages };
 }
+
+export async function getUserId(client) {
+  const { data } = await client.users.findMyUser({
+    "user.fields": ["id"],
+    // "created_at",
+    // "description",
+    // "entities",
+    // "location",
+    // "name",
+    // "pinned_tweet_id",
+    // "profile_image_url",
+    // "protected",
+    // "public_metrics",
+    // "url",
+    // "username",
+    // "verified",
+    // "withheld",
+  });
+  return String(data?.id);
+}
