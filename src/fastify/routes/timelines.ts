@@ -143,6 +143,9 @@ function _getOptionsV2(request) {
   const options = {
     ...request.query,
     max_results: Math.min(request.query.count || 20, MAX_COUNT),
+    pagination_token: request.query.pagination_token,
+    next_token: undefined,
+    previous_token: undefined,
     list_id: undefined,
   };
   return options;
