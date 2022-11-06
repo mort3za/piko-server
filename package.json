@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.ts",
   "type": "module",
-  "homepage": "https://piko-server.vercel.app/",
+  "homepage": "https://github.com/mort3za/piko-server",
   "scripts": {
     "start": "vercel dev --listen 6060",
     "deploy": "vercel --prod",
